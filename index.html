@@ -1,219 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
+  <meta charset="UTF-8">
   <title>375ai Gamer Leaderboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    /* === Global & Layout === */
-    html {
-      box-sizing: border-box;
-    }
-    *,
-    *::before,
-    *::after {
-      box-sizing: inherit;
-    }
+    /* ------- global resets ------- */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 3fr;
-      background: linear-gradient(180deg, #000000, #111111);
-      color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      align-items: center;
-      overflow-x: hidden;
+      background: #111;
+      color: #fff;
+      font-family: sans-serif;
+      line-height: 1.4;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ------- container ------- */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
     }
 
-    /* === Legend / Info Panel (left side) === */
-    #legend-info {
-      grid-column: 1;
-      padding: 0 5vw;
+    /* ------- heading ------- */
+    .title {
+      font-size: 2.5rem;
+      color: #FF3B00; /* 375ai red */
+      text-align: center;    /* always center over the table */
+      margin-bottom: 1.5rem;
     }
-    #legend-info h2 {
-      margin: 0 0 0.5rem;
-      font-size: 1.1rem;
-      font-weight: bold;
-      text-decoration: underline;
-    }
-    .legend-item {
+
+    /* ------- layout ------- */
+    .content {
       display: flex;
+      justify-content: center;  /* center the whole block */
       align-items: center;
-      margin: 0.5rem 0;
-      font-size: 0.95rem;
-    }
-    .legend-swatch {
-      width: 16px;
-      height: 16px;
-      margin-right: 0.5rem;
-      border-radius: 3px;
-      flex-shrink: 0;
-    }
-    .swatch-g1 {
-      background: #ffd9b3;
-    }
-    .swatch-g2 {
-      background: #ffb86c;
-    }
-    .swatch-faker {
-      background: #ff3600;
+      gap: 2rem;
+      /* push everything 20% in from left on desktop */
+      padding-left: 20vw;
     }
 
-    /* === Main Content / Table (right side) === */
-    #main-content {
-      grid-column: 2;
+    /* legend/info box */
+    .legend {
+      flex: 0 0 200px;
       display: flex;
       flex-direction: column;
-      align-items: center; /* centers on mobile/tablet & desktop unless overridden below */
+      gap: 0.75rem;
+      order: 1;
+      align-items: flex-start;
     }
-    #main-content h1 {
-      margin: 0 0 1rem;
-      font-size: 2.5rem;
-      color: #ff3600;
-      text-align: center;
+    .legend h2 {
+      font-size: 1rem;
+      font-weight: bold;
+      text-decoration: underline;
+      margin-bottom: 0.5rem;
     }
-    #table-container {
-      width: 75%;
-      max-width: 700px;
+    .legend .tier {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .legend .swatch {
+      width: 1rem;
+      height: 1rem;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .tier-I   .swatch { background: #FFE7CD; } /* pale */
+    .tier-II  .swatch { background: #FFC67D; } /* mid */
+    .tier-FAKER .swatch { background: #FF3B00; } /* bright */
+
+    /* table wrapper */
+    .table-wrapper {
+      flex: 1;
+      overflow-x: auto;
+      order: 2;
     }
     table {
-      width: 100%;
-      border-collapse: collapse;
-      overflow: hidden;
-      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 600px;
+      margin: 0 auto;
+      background: #222;
+      border: 1px solid #555;
       border-radius: 8px;
     }
-    thead {
-      background: #ff3600;
-      color: #fff;
-    }
-    th,
-    td {
+    th, td {
       padding: 0.75rem 1rem;
-      font-size: 0.95rem;
+      text-align: center;
+      border-bottom: 1px solid #333;
+      color: #eee;
     }
-    th {
-      text-align: left;
+    thead th {
+      background: #FF3B00;
+      color: #fff;
+      font-size: 1.1rem;
     }
-    tbody tr:nth-child(even) td {
+    tbody tr:nth-child(odd) {
       background: #1a1a1a;
     }
-    tbody td {
-      background: #222222;
-      color: #fff;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    td:nth-child(2) {
-      text-align: right;
-    }
-    td:nth-child(3) {
-      text-align: center;
-    }
+    /* tier column cell coloring */
+    tbody td.tier-I    { background: #FFE7CD; color: #000; }
+    tbody td.tier-II   { background: #FFC67D; color: #000; }
+    tbody td.tier-FAKER  { background: #FF3B00; color: #fff; }
 
-    /* Tier color coding via data-tier attribute */
-    td[data-tier="Gamer I"] {
-      background: #ffd9b3;
-    }
-    td[data-tier="Gamer II"] {
-      background: #ffb86c;
-    }
-    td[data-tier="FAKER"] {
-      background: #ff3600;
-      color: #fff;
-    }
-
-    /* === DESKTOP-ONLY OVERRIDES (≥769px) === */
-    @media (min-width: 769px) {
-      /* 1) stop centering entire right‐column so we can manage centering ourselves */
-      #main-content {
-        align-items: flex-start;
+    /* ------- responsive tweaks ------- */
+    @media (max-width: 768px) {
+      .content {
+        flex-direction: column;
+        padding-left: 0;
+        gap: 1rem;
       }
-      /* 2) center just the table container in that column */
-      #table-container {
-        margin: 0 auto;
+      .legend {
+        order: 2;
+        align-items: center;
+        text-align: center;
       }
-      /* 3) give the H1 the same width and auto‐center it */
-      #main-content h1 {
-        width: 75%;
-        max-width: 700px;
-        margin: 0 auto 1rem;
+      .table-wrapper {
+        order: 1;
+        width: 100%;
+      }
+      /* center heading on small screens too */
+      .title {
         text-align: center;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Legend / Instructions -->
-  <div id="legend-info">
-    <h2>Please don’t change your Discord username</h2>
-    <div class="legend-item">
-      <div class="legend-swatch swatch-g1"></div>
-      <span>Gamer I = 0 – 199 XP</span>
-    </div>
-    <div class="legend-item">
-      <div class="legend-swatch swatch-g2"></div>
-      <span>Gamer II = 200 – 399 XP</span>
-    </div>
-    <div class="legend-item">
-      <div class="legend-swatch swatch-faker"></div>
-      <span>FAKER = 400+ XP</span>
+  <div class="container">
+    <h1 class="title">375ai Gamer Leaderboard</h1>
+    <div class="content">
+      <!-- legend / explanation -->
+      <div class="legend">
+        <h2>Please don’t change your Discord username</h2>
+        <div class="tier tier-I">
+          <div class="swatch"></div>
+          <div>Gamer I = 0 – 199 XP</div>
+        </div>
+        <div class="tier tier-II">
+          <div class="swatch"></div>
+          <div>Gamer II = 200 – 399 XP</div>
+        </div>
+        <div class="tier tier-FAKER">
+          <div class="swatch"></div>
+          <div>FAKER = 400+ XP</div>
+        </div>
+      </div>
+
+      <!-- actual leaderboard table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Username</th><th>Total XP</th><th>Tier</th></tr>
+          </thead>
+          <tbody>
+            <!--
+              Here you’d loop over your Google Sheets data
+              and output rows like this:
+            -->
+            <tr>
+              <td>@ryuu_0o</td>
+              <td>36</td>
+              <td class="tier-I">Gamer I</td>
+            </tr>
+            <tr>
+              <td>@chandlerbing4281</td>
+              <td>29</td>
+              <td class="tier-I">Gamer I</td>
+            </tr>
+            <!-- …and so on… -->
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-
-  <!-- Main Table -->
-  <div id="main-content">
-    <h1>375ai Gamer Leaderboard</h1>
-    <div id="table-container">
-      <table id="leaderboard">
-        <thead>
-          <tr>
-            <th>Username</th>
-            <th>Total XP</th>
-            <th>Tier</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
-
-  <script>
-    // fetch & render from your published Google Sheet
-    const SHEET_ID = '1-URTW-manGg0sCs0xbvLKhvLpy9ZXmiytUVOR5ZTCXw'; // your sheet ID
-    const QUERY_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?sheet=Leaderboard&headers=1`;
-
-    fetch(QUERY_URL)
-      .then(r => r.text())
-      .then(txt => {
-        // extract JSON from Google’s wrapper
-        const json = JSON.parse(
-          txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\)/)[1]
-        );
-        const rows = json.table.rows;
-        const tbody = document.querySelector('#leaderboard tbody');
-
-        rows.forEach(r => {
-          const user = r.c[0]?.f || '';
-          const xp   = r.c[1]?.f || '0';
-          let tier  = r.c[2]?.f || '';
-          // rename Gamer III → FAKER
-          if (tier === 'Gamer III') tier = 'FAKER';
-
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${user}</td>
-            <td>${xp}</td>
-            <td data-tier="${tier}">${tier}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-      })
-      .catch(err => console.error('Error loading sheet:', err));
-  </script>
 </body>
 </html>
