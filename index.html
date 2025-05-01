@@ -5,47 +5,64 @@
   <title>375ai Gamer Leaderboard</title>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script>
-    // Load Google Charts
-    google.charts.load('current',{packages:['corechart','table']});
-    google.charts.setOnLoadCallback(function(){
-      // Pull only columns A and B from your published sheet
+    // Load only the Table package
+    google.charts.load('current',{packages:['table']});
+    google.charts.setOnLoadCallback(drawTable);
+
+    function drawTable(){
+      // Query only columns A (Username) & B (Total XP)
       const query = new google.visualization.Query(
         'https://docs.google.com/spreadsheets/d/1-URTW-manGg0sCs0xbvLKhvLpy9ZXmiytUVOR5ZTCXw/gviz/tq?sheet=Leaderboard&headers=1&tq=select%20A%2C%20B'
       );
-      query.send(function(response){
-        if(response.isError()){
-          document.body.innerHTML = 'Error: '+response.getMessage();
+      query.send(function(res){
+        if(res.isError()){
+          document.body.innerHTML = 'Error loading data: '+res.getMessage();
           return;
         }
-        const data = response.getDataTable();
-
-        // Draw the table
+        const data = res.getDataTable();
         new google.visualization.Table(
           document.getElementById('table_div')
-        ).draw(data, { width:'100%', height:'auto' });
-
-        // Draw the horizontal bar chart
-        new google.visualization.BarChart(
-          document.getElementById('chart_div')
-        ).draw(data, {
-          title: '375ai Gamer Leaderboard',
-          legend: { position: 'none' },
-          hAxis: { title: 'Total XP', minValue: 0 },
-          vAxis: { title: 'Username' },
-          bars: 'horizontal',
-          height: data.getNumberOfRows() * 30 + 100
+        ).draw(data,{
+          showRowNumber: false,
+          width: '60%',
+          height: 'auto'
         });
       });
-    });
+    }
   </script>
   <style>
-    body { font-family: sans-serif; margin: 20px; }
-    #chart_div, #table_div { margin-bottom: 40px; }
+    body {
+      background: #121212;
+      color: #E0E0E0;
+      font-family: sans-serif;
+      margin: 40px 0;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 30px;
+      font-size: 2em;
+    }
+    #table_div {
+      margin: 0 auto;      /* center the table */
+      background: #1E1E1E; /* darker container behind the table */
+      padding: 20px;
+      border-radius: 8px;
+    }
+    /* Optional: tweak row colors if you want */
+    .google-visualization-table-tr-even {
+      background-color: #2A2A2A !important;
+    }
+    .google-visualization-table-tr-odd {
+      background-color: #232323 !important;
+    }
+    .google-visualization-table-th {
+      background-color: #333333 !important;
+      color: #FFFFFF !important;
+    }
   </style>
 </head>
 <body>
   <h1>375ai Gamer Leaderboard</h1>
-  <div id="chart_div"></div>
   <div id="table_div"></div>
 </body>
 </html>
