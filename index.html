@@ -25,11 +25,7 @@
         const table = new google.visualization.Table(
           document.getElementById('table_div')
         );
-        table.draw(data, {
-          showRowNumber: false,
-          width: '100%',
-          height: '100%'
-        });
+        table.draw(data,{ showRowNumber:false, width:'100%', height:'100%' });
         applyTierStyles();
       });
     }
@@ -40,7 +36,7 @@
       for (let row of tbl.tBodies[0].rows) {
         // center XP
         row.cells[1].style.textAlign = 'center';
-        // style Tier + rename Gamer III to FAKER
+        // style Tier + rename Gamer III → FAKER
         const t = row.cells[2].textContent.trim();
         if (t === 'Gamer I') {
           row.cells[2].style.cssText =
@@ -59,33 +55,34 @@
   <style>
     /* Page setup */
     body {
-      margin: 0; padding: 40px 0;
-      background: linear-gradient(135deg,#050607 0%,#1A1A1A 100%);
-      color: #B9C1C1;
-      font-family: 'Roboto', sans-serif;
-      text-align: center;
+      margin:0; padding:40px 0;
+      background:linear-gradient(135deg,#050607,#1A1A1A);
+      color:#B9C1C1; font-family:'Roboto',sans-serif;
+      text-align:center;
     }
     h1 {
-      margin: 0 0 20px;
-      font-size: 2.5rem;
-      color: #FF3D14;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+      margin:0 0 20px;
+      font-size:2.5rem;
+      color:#FF3D14;
+      text-shadow:0 2px 4px rgba(0,0,0,0.7);
     }
 
-    /* Flex container for info panel + table */
-    #dashboard {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 40px;
-      width: 100%;
+    /* Wrapper: centers table + positions info-panel */
+    .table-wrapper {
+      position: relative;
+      width: 75%;           /* 15% smaller than original 90% */
+      max-width: 700px;
+      margin: 0 auto;       /* centers wrapper under the H1 */
+      text-align: left;     /* so legend text is left-aligned */
     }
 
-    /* Info panel on the left */
+    /* Info panel to the left of the table */
     #info-panel {
+      position: absolute;
+      left: -220px;
+      top: 50%;
+      transform: translateY(-50%);
       width: 200px;
-      text-align: left;
-      margin-top: -10px; /* tweak to vertically align with table */
     }
     .notice {
       margin: 0 0 12px;
@@ -95,7 +92,7 @@
       font-size: 0.95rem;
     }
 
-    /* Legend items */
+    /* Legend styling */
     #legend {
       display: flex;
       flex-direction: column;
@@ -104,8 +101,8 @@
     .legend-item {
       display: flex;
       align-items: center;
-      color: #E0E0E0;
       font-size: 0.95rem;
+      color: #E0E0E0;
     }
     .swatch {
       width: 14px; height: 14px;
@@ -117,10 +114,9 @@
     .tier2 { background: #FFB266; }
     .tier3 { background: #FF3D14; }
 
-    /* Table container: 15% smaller (was 90%, now 75%) */
+    /* Table container fills the wrapper */
     #table_div {
-      width: 75%;
-      max-width: 700px;
+      width: 100%;
       max-height: 70vh;
       overflow-y: auto;
       background: rgba(26,26,26,0.9);
@@ -130,7 +126,7 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.5);
     }
 
-    /* Header row: solid orange, centered text */
+    /* Header row */
     .google-visualization-table-th {
       background: #FF3D14 !important;
       color: #FFFFFF   !important;
@@ -152,35 +148,20 @@
       border-bottom: 1px solid #333!important;
     }
     /* Sticky header */
-    #table_div table {
-      border-collapse: separate;
-      border-spacing: 0;
-    }
-    #table_div thead th {
-      position: sticky;
-      top: 0;
-      z-index: 2;
-    }
+    #table_div table { border-collapse: separate; border-spacing: 0; }
+    #table_div thead th { position: sticky; top: 0; z-index: 2; }
   </style>
 </head>
 <body>
   <h1>375ai Gamer Leaderboard</h1>
-  <div id="dashboard">
+
+  <div class="table-wrapper">
     <div id="info-panel">
       <p class="notice">Please don’t change your Discord username</p>
       <div id="legend">
-        <div class="legend-item">
-          <span class="swatch tier1"></span>
-          Gamer I ＝ 0 – 199 XP
-        </div>
-        <div class="legend-item">
-          <span class="swatch tier2"></span>
-          Gamer II ＝ 200 – 399 XP
-        </div>
-        <div class="legend-item">
-          <span class="swatch tier3"></span>
-          FAKER ＝ 400+ XP
-        </div>
+        <div class="legend-item"><span class="swatch tier1"></span>Gamer I ＝ 0 – 199 XP</div>
+        <div class="legend-item"><span class="swatch tier2"></span>Gamer II ＝ 200 – 399 XP</div>
+        <div class="legend-item"><span class="swatch tier3"></span>FAKER ＝ 400+ XP</div>
       </div>
     </div>
     <div id="table_div"></div>
