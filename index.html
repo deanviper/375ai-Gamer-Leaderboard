@@ -55,7 +55,12 @@
       text-align:center;
     }
 
-    /* ===== Dashboard (legend + table + moved header) ===== */
+    /* ===== Desktop header (inside table) ===== */
+    .header-wrapper {
+      display: none;
+    }
+
+    /* ===== Dashboard ===== */
     #dashboard {
       display:flex;
       align-items:center;
@@ -92,7 +97,7 @@
       margin-right:6px;
     }
 
-    /* Table container + header */
+    /* Table container + in-table header */
     #table-container {
       flex:1 1 auto;
       width:75%;
@@ -103,7 +108,7 @@
       font-size:2.5rem;
       color:#FF3D14;
       text-shadow:0 2px 4px rgba(0,0,0,0.7);
-      text-align:center;      /* now centered over the table */
+      text-align:center;
     }
     #table_div {
       width:100%;
@@ -136,8 +141,17 @@
     #table_div table { border-collapse:separate; border-spacing:0; }
     #table_div thead th { position:sticky; top:0; z-index:2; }
 
-    /* ===== Mobile ===== */
+    /* ===== Mobile tweaks ===== */
     @media (max-width:768px) {
+      /* show top header, hide in-table header */
+      .header-wrapper {
+        display: block;
+        margin-bottom:20px;
+      }
+      #table-container h1 {
+        display: none;
+      }
+
       #dashboard {
         flex-direction:column;
       }
@@ -161,7 +175,15 @@
   </style>
 </head>
 <body>
+
+  <!-- MOBILE ONLY header -->
+  <div class="header-wrapper">
+    <h1>375ai Gamer Leaderboard</h1>
+  </div>
+
   <div id="dashboard">
+
+    <!-- legend always here -->
     <div id="info-panel">
       <p class="notice">Please don’t change your Discord username</p>
       <div id="legend">
@@ -180,11 +202,12 @@
       </div>
     </div>
 
+    <!-- TABLE + DESKTOP ONLY header -->
     <div id="table-container">
-      <!-- moved header here so it’s always centered over the table -->
       <h1>375ai Gamer Leaderboard</h1>
       <div id="table_div"></div>
     </div>
+
   </div>
 </body>
 </html>
