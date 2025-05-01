@@ -34,9 +34,7 @@
       const tbl = document.querySelector('#table_div table');
       if (!tbl) return;
       for (let row of tbl.tBodies[0].rows) {
-        // center XP
         row.cells[1].style.textAlign = 'center';
-        // style Tier + rename Gamer III → FAKER
         const t = row.cells[2].textContent.trim();
         if (t === 'Gamer I') {
           row.cells[2].style.cssText =
@@ -67,94 +65,108 @@
       text-shadow:0 2px 4px rgba(0,0,0,0.7);
     }
 
-    /* Wrapper: centers table + positions info-panel */
+    /* Wrapper: 75% width, centered */
     .table-wrapper {
-      position: relative;
-      width: 75%;           /* 15% smaller than original 90% */
-      max-width: 700px;
-      margin: 0 auto;       /* centers wrapper under the H1 */
-      text-align: left;     /* so legend text is left-aligned */
+      position:relative;
+      width:75%;
+      max-width:700px;
+      margin:0 auto;
+      text-align:left;
     }
 
-    /* Info panel to the left of the table */
+    /* Info panel at middle-left of wrapper */
     #info-panel {
-      position: absolute;
-      left: -220px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 200px;
+      position:absolute;
+      left:-220px;
+      top:50%;
+      transform:translateY(-50%);
+      width:200px;
     }
     .notice {
-      margin: 0 0 12px;
-      font-weight: bold;
-      text-decoration: underline;
-      color: #E0E0E0;
-      font-size: 0.95rem;
+      margin:0 0 12px;
+      font-weight:bold;
+      text-decoration:underline;
+      color:#E0E0E0;
+      font-size:0.95rem;
     }
 
-    /* Legend styling */
+    /* Legend */
     #legend {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
     }
     .legend-item {
-      display: flex;
-      align-items: center;
-      font-size: 0.95rem;
-      color: #E0E0E0;
+      display:flex;
+      align-items:center;
+      color:#E0E0E0;
+      font-size:0.95rem;
     }
     .swatch {
-      width: 14px; height: 14px;
-      border-radius: 3px;
-      margin-right: 6px;
-      flex-shrink: 0;
+      width:14px; height:14px;
+      border-radius:3px;
+      margin-right:6px;
+      flex-shrink:0;
     }
-    .tier1 { background: #FFD8B2; }
-    .tier2 { background: #FFB266; }
-    .tier3 { background: #FF3D14; }
+    .tier1 { background:#FFD8B2; }
+    .tier2 { background:#FFB266; }
+    .tier3 { background:#FF3D14; }
 
-    /* Table container fills the wrapper */
+    /* Table container fills wrapper */
     #table_div {
-      width: 100%;
-      max-height: 70vh;
-      overflow-y: auto;
-      background: rgba(26,26,26,0.9);
-      border: 1px solid #B9C1C1;
-      border-radius: 12px;
-      padding: 10px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      width:100%;
+      max-height:70vh;
+      overflow-y:auto;
+      background:rgba(26,26,26,0.9);
+      border:1px solid #B9C1C1;
+      border-radius:12px;
+      padding:10px;
+      box-shadow:0 8px 24px rgba(0,0,0,0.5);
     }
 
-    /* Header row */
+    /* Header */
     .google-visualization-table-th {
-      background: #FF3D14 !important;
-      color: #FFFFFF   !important;
-      font-weight: 700  !important;
-      font-size: 1.1rem !important;
-      text-align: center!important;
-      padding: 12px 16px!important;
+      background:#FF3D14!important;
+      color:#FFFFFF   !important;
+      font-weight:700  !important;
+      font-size:1.1rem !important;
+      text-align:center!important;
+      padding:12px 16px!important;
     }
     /* Zebra stripes */
     .google-visualization-table-tr-even {
-      background: #1E1E1E !important;
+      background:#1E1E1E!important;
     }
     .google-visualization-table-tr-odd {
-      background: #181818 !important;
+      background:#181818!important;
     }
-    /* Body cells */
+    /* Cells */
     .google-visualization-table-td {
-      padding: 12px 16px!important;
-      border-bottom: 1px solid #333!important;
+      padding:12px 16px!important;
+      border-bottom:1px solid #333!important;
     }
     /* Sticky header */
-    #table_div table { border-collapse: separate; border-spacing: 0; }
-    #table_div thead th { position: sticky; top: 0; z-index: 2; }
+    #table_div table {border-collapse:separate;border-spacing:0;}
+    #table_div thead th {position:sticky;top:0;z-index:2;}
+
+    /* Mobile: stack panels & widen wrapper */
+    @media screen and (max-width: 768px) {
+      .table-wrapper {
+        width:90%;
+      }
+      #info-panel {
+        position:relative;
+        left:0; top:0; transform:none;
+        margin-bottom:20px;
+        width:100%;
+      }
+      /* center legend text under title */
+      #info-panel, #legend { text-align:center; }
+    }
   </style>
 </head>
 <body>
   <h1>375ai Gamer Leaderboard</h1>
-
   <div class="table-wrapper">
     <div id="info-panel">
       <p class="notice">Please don’t change your Discord username</p>
