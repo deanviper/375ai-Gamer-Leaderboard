@@ -55,9 +55,19 @@
       text-align:center;
     }
 
-    /* ===== Desktop header (inside table) ===== */
+    /* ===== Desktop-only wrapper ===== */
     .header-wrapper {
-      display: none;
+      display:none;
+      width:75%;
+      max-width:700px;
+      margin:0 auto 20px;
+    }
+    /* style the mobile header */
+    .header-wrapper h1 {
+      margin:0;
+      font-size:2.5rem;
+      color:#FF3D14;
+      text-shadow:0 2px 4px rgba(0,0,0,0.7);
     }
 
     /* ===== Dashboard ===== */
@@ -97,7 +107,7 @@
       margin-right:6px;
     }
 
-    /* Table container + in-table header */
+    /* Table container + in-table header for desktop */
     #table-container {
       flex:1 1 auto;
       width:75%;
@@ -143,13 +153,11 @@
 
     /* ===== Mobile tweaks ===== */
     @media (max-width:768px) {
-      /* show top header, hide in-table header */
       .header-wrapper {
-        display: block;
-        margin-bottom:20px;
+        display:block;
       }
       #table-container h1 {
-        display: none;
+        display:none;
       }
 
       #dashboard {
@@ -176,14 +184,14 @@
 </head>
 <body>
 
-  <!-- MOBILE ONLY header -->
+  <!-- mobile-only header -->
   <div class="header-wrapper">
     <h1>375ai Gamer Leaderboard</h1>
   </div>
 
   <div id="dashboard">
 
-    <!-- legend always here -->
+    <!-- legend always on left -->
     <div id="info-panel">
       <p class="notice">Please don’t change your Discord username</p>
       <div id="legend">
@@ -202,7 +210,7 @@
       </div>
     </div>
 
-    <!-- TABLE + DESKTOP ONLY header -->
+    <!-- desktop header + table -->
     <div id="table-container">
       <h1>375ai Gamer Leaderboard</h1>
       <div id="table_div"></div>
