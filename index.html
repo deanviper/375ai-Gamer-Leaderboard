@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>375ai Gamer Leaderboard</title>
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script>
+    google.charts.load('current',{packages:['corechart','table']});
+    google.charts.setOnLoadCallback(function(){
+      const q = new google.visualization.Query(
+        'https://docs.google.com/spreadsheets/d/1-URTW-manGg0sCs0xbvLKhvLpy9ZXmiytUVOR5ZTCXw/gviz/tq?sheet=Leaderboard&headers=1'
+      );
+      q.send(function(res){
+        if(res.isError()){
+          document.body.innerHTML = 'Error: '+res.getMessage();
+          return;
+        }
+        const data = res.getDataTable();
+        new google.visualization.Table(
+          document.getElementById('table_div')
+        ).draw(data,{width:'100%',height:'auto'});
+        new google.visualization.BarChart(
+          document.getElementById('chart_div')
+        ).draw(data,{
+          title:'375ai Gamer Leaderboard',
+          legend:{position:'none'},
+          hAxis:{title:'Total XP',minValue:0},
+          vAxis:{title:'Username'},
+          bars:'horizontal',
+          height:data.getNumberOfRows()*30+100
+        });
+      });
+    });
+  </script>
+  <style>
+    body{font-family:sans-serif;margin:20px}
+    #chart_div,#table_div{margin-bottom:40px}
+  </style>
+</head>
+<body>
+  <h1>375ai Gamer Leaderboard</h1>
+  <div id="chart_div"></div>
+  <div id="table_div"></div>
+</body>
+</html>
