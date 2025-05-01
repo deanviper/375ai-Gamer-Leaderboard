@@ -17,12 +17,14 @@
       );
       q.send(res => {
         if (res.isError()) {
-          document.body.innerHTML = '<p style="color:#FF3D14">Error: ' + res.getMessage() + '</p>';
+          document.body.innerHTML = '<p style="color:#FF3D14">Error: '+res.getMessage()+'</p>';
           return;
         }
         const data = res.getDataTable();
-        const table = new google.visualization.Table(document.getElementById('table_div'));
-        table.draw(data, { showRowNumber:false, width:'100%', height:'100%' });
+        const table = new google.visualization.Table(
+          document.getElementById('table_div')
+        );
+        table.draw(data,{showRowNumber:false,width:'100%',height:'100%'});
         applyTierStyles();
       });
     }
@@ -33,52 +35,61 @@
       for (let row of tbl.tBodies[0].rows) {
         // center XP
         row.cells[1].style.textAlign = 'center';
-        // style Tier cell and rename Gamer III → FAKER
+        // style Tier and rename Gamer III → FAKER
         const t = row.cells[2].textContent.trim();
         if (t === 'Gamer I') {
-          row.cells[2].style.cssText = 'background:#FFD8B2;color:#050607;font-weight:bold;text-align:center;';
+          row.cells[2].style.cssText =
+            'background:#FFD8B2;color:#050607;font-weight:bold;text-align:center;';
         } else if (t === 'Gamer II') {
-          row.cells[2].style.cssText = 'background:#FFB266;color:#050607;font-weight:bold;text-align:center;';
+          row.cells[2].style.cssText =
+            'background:#FFB266;color:#050607;font-weight:bold;text-align:center;';
         } else if (t === 'Gamer III') {
           row.cells[2].textContent = 'FAKER';
-          row.cells[2].style.cssText = 'background:#FF3D14;color:#FFFFFF;font-weight:bold;text-align:center;';
+          row.cells[2].style.cssText =
+            'background:#FF3D14;color:#FFFFFF;font-weight:bold;text-align:center;';
         }
       }
     }
   </script>
   <style>
+    /* Page setup */
     body {
       margin: 0; padding: 40px 0;
-      background: linear-gradient(135deg, #050607 0%, #1A1A1A 100%);
+      background: linear-gradient(135deg,#050607,#1A1A1A);
       color: #B9C1C1; text-align: center;
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Roboto',sans-serif;
     }
     h1 {
-      margin: 0 0 20px; font-size: 2.5rem;
-      color: #FF3D14; text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+      margin: 0 0 20px;
+      font-size: 2.5rem;
+      color: #FF3D14;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.7);
     }
 
-    /* Layout */
-    #dashboard {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 40px;
-      width: 100%;
-      flex-wrap: wrap;
+    /* Wrapper around table (centers table only) */
+    .table-wrapper {
+      position: relative;
+      display: inline-block;
+      text-align: left; /* so legend is left-aligned inside panel */
     }
+
+    /* Info panel positioned at middle-left of table */
     #info-panel {
+      position: absolute;
+      left: -220px;
+      top: 50%;
+      transform: translateY(-50%);
       width: 200px;
-      text-align: left;
     }
-    #info-panel .notice {
+    .notice {
       margin: 0 0 12px;
-      font-style: italic;
+      font-weight: bold;
+      text-decoration: underline;
       color: #E0E0E0;
       font-size: 0.95rem;
     }
 
-    /* Legend */
+    /* Legend styling */
     #legend {
       display: flex;
       flex-direction: column;
@@ -91,8 +102,7 @@
       color: #E0E0E0;
     }
     .swatch {
-      width: 14px;
-      height: 14px;
+      width: 14px; height: 14px;
       border-radius: 3px;
       margin-right: 6px;
       flex-shrink: 0;
@@ -104,10 +114,12 @@
     /* Table container */
     #table_div {
       width: 90%; max-width: 700px; max-height: 70vh;
-      margin: 0 auto; overflow-y: auto;
+      overflow-y: auto;
       background: rgba(26,26,26,0.9);
-      border: 1px solid #B9C1C1; border-radius: 12px;
-      padding: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      border: 1px solid #B9C1C1;
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
     }
 
     /* Header */
@@ -128,9 +140,8 @@
     }
     /* Body cells */
     .google-visualization-table-td {
-      padding: 12px 16px        !important;
+      padding: 12px 16px !important;
       border-bottom: 1px solid #333 !important;
-      /* no forced color here */
     }
     /* Sticky header */
     #table_div table { border-collapse: separate; border-spacing: 0; }
@@ -139,13 +150,19 @@
 </head>
 <body>
   <h1>375ai Gamer Leaderboard</h1>
-  <div id="dashboard">
+  <div class="table-wrapper">
     <div id="info-panel">
       <p class="notice">Please don’t change your Discord username</p>
       <div id="legend">
-        <div class="legend-item"><span class="swatch tier1"></span>Gamer I ＝ 0 – 199 XP</div>
-        <div class="legend-item"><span class="swatch tier2"></span>Gamer II ＝ 200 – 399 XP</div>
-        <div class="legend-item"><span class="swatch tier3"></span>FAKER ＝ 400+ XP</div>
+        <div class="legend-item">
+          <span class="swatch tier1"></span>Gamer I ＝ 0 – 199 XP
+        </div>
+        <div class="legend-item">
+          <span class="swatch tier2"></span>Gamer II ＝ 200 – 399 XP
+        </div>
+        <div class="legend-item">
+          <span class="swatch tier3"></span>FAKER ＝ 400+ XP
+        </div>
       </div>
     </div>
     <div id="table_div"></div>
