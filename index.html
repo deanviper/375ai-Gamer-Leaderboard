@@ -44,7 +44,7 @@
     }
   </script>
   <style>
-    /* ===== Reset & Base ===== */
+    /* ===== Base ===== */
     body {
       margin:0; padding:40px 0;
       background:linear-gradient(135deg,#050607,#1A1A1A);
@@ -55,33 +55,36 @@
       text-shadow:0 2px 4px rgba(0,0,0,0.7);
     }
 
-    /* ===== Grid wrapper ===== */
+    /* ===== Grid layout for desktop ===== */
     #main {
       display: grid;
       grid-template-columns: 200px 1fr;
+      grid-template-rows: auto 1fr;
+      grid-template-areas:
+        "legend header"
+        "legend table";
       gap: 40px;
       padding: 0 20px;
-      box-sizing: border-box;
-      /* slide everything 20% from the left: */
-      margin-left: 20vw;
     }
-    /* header sits in column 2, above the table */
+    /* Legend on left spanning two rows */
+    #info-panel { grid-area: legend; }
+    /* Header above table */
     .header-wrapper {
-      grid-column: 2;
+      grid-area: header;
       justify-self: center;
-      margin-bottom: 20px;
     }
-    /* dashboard row: legend in col1, table in col2 */
-    #dashboard {
-      grid-column: 1 / span 2;
-      display: flex;
-      align-items: center;   /* vertically center legend next to table */
-      justify-content: flex-start;
+    /* Table on right under header */
+    #table-container { grid-area: table; }
+
+    /* Shift entire block 20% to the left of its normal centered position */
+    @media (min-width: 769px) {
+      #main {
+        transform: translateX(-20%);
+      }
     }
 
     /* ===== Legend panel ===== */
     #info-panel {
-      flex: 0 0 200px;
       text-align: left;
     }
     .notice {
@@ -108,7 +111,6 @@
 
     /* ===== Table container ===== */
     #table-container {
-      flex: 1 1 auto;
       width: 75%;
       max-width: 700px;
     }
@@ -124,7 +126,7 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.5);
     }
 
-    /* ===== Table style ===== */
+    /* ===== Table styling ===== */
     .google-visualization-table-th {
       background: #FF3D14!important;
       color: #fff!important;
@@ -143,18 +145,13 @@
     #table_div table { border-collapse: separate; border-spacing: 0; }
     #table_div thead th { position: sticky; top: 0; z-index: 2; }
 
-    /* ===== Mobile (keep exactly as you had it) ===== */
+    /* ===== Mobile: no layout-change, keep scrollable ===== */
     @media (max-width: 768px) {
       #main {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-left: 0;           /* reset desktop shift */
-        padding: 0 10px;
-      }
-      #dashboard {
-        flex-direction: column;
-        align-items: center;
+        transform: none;   /* reset desktop shift */
       }
       #info-panel {
         width: 100%;
@@ -177,30 +174,30 @@
 </head>
 <body>
   <div id="main">
+    <div id="info-panel">
+      <p class="notice">Please don’t change your Discord username</p>
+      <div id="legend">
+        <div class="legend-item">
+          <span class="swatch" style="background:#FFD8B2"></span>
+          Gamer I ＝ 0 – 199 XP
+        </div>
+        <div class="legend-item">
+          <span class="swatch" style="background:#FFB266"></span>
+          Gamer II ＝ 200 – 399 XP
+        </div>
+        <div class="legend-item">
+          <span class="swatch" style="background:#FF3D14"></span>
+          FAKER ＝ 400+ XP
+        </div>
+      </div>
+    </div>
+
     <div class="header-wrapper">
       <h1>375ai Gamer Leaderboard</h1>
     </div>
-    <div id="dashboard">
-      <div id="info-panel">
-        <p class="notice">Please don’t change your Discord username</p>
-        <div id="legend">
-          <div class="legend-item">
-            <span class="swatch" style="background:#FFD8B2"></span>
-            Gamer I ＝ 0 – 199 XP
-          </div>
-          <div class="legend-item">
-            <span class="swatch" style="background:#FFB266"></span>
-            Gamer II ＝ 200 – 399 XP
-          </div>
-          <div class="legend-item">
-            <span class="swatch" style="background:#FF3D14"></span>
-            FAKER ＝ 400+ XP
-          </div>
-        </div>
-      </div>
-      <div id="table-container">
-        <div id="table_div"></div>
-      </div>
+
+    <div id="table-container">
+      <div id="table_div"></div>
     </div>
   </div>
 </body>
