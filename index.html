@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <title>375ai Gamer Leaderboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Roboto font -->
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- Roboto -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script>
@@ -16,47 +16,51 @@
         'https://docs.google.com/spreadsheets/d/1-URTW-manGg0sCs0xbvLKhvLpy9ZXmiytUVOR5ZTCXw/gviz/tq'
         + '?sheet=Leaderboard&headers=1&tq=select%20A%2C%20B%2C%20C'
       );
-      q.send(res => {
-        if (res.isError()) {
-          document.body.innerHTML = '<p style="color:#FF3D14">Error: ' + res.getMessage() + '</p>';
+      q.send(r => {
+        if (r.isError()) {
+          document.body.innerHTML = '<p style="color:#FF3D14">Error: '+r.getMessage()+'</p>';
           return;
         }
-        const data = res.getDataTable();
+        const data = r.getDataTable();
         const table = new google.visualization.Table(document.getElementById('table_div'));
-        table.draw(data, { showRowNumber:false, width:'100%', height:'100%' });
+        table.draw(data,{showRowNumber:false,width:'100%',height:'100%'});
         styleRows();
       });
     }
-
     function styleRows() {
       const tbl = document.querySelector('#table_div table');
       if (!tbl) return;
       for (let row of tbl.tBodies[0].rows) {
         row.cells[1].style.textAlign = 'center';
-        const t = row.cells[2].textContent.trim();
+        let t = row.cells[2].textContent.trim();
         if (t === 'Gamer I') {
-          row.cells[2].style.cssText =
-            'background:#FFD8B2;color:#050607;font-weight:bold;text-align:center;';
+          row.cells[2].style.cssText = 'background:#FFD8B2;color:#050607;font-weight:bold;text-align:center;';
         } else if (t === 'Gamer II') {
-          row.cells[2].style.cssText =
-            'background:#FFB266;color:#050607;font-weight:bold;text-align:center;';
+          row.cells[2].style.cssText = 'background:#FFB266;color:#050607;font-weight:bold;text-align:center;';
         } else {
           row.cells[2].textContent = 'FAKER';
-          row.cells[2].style.cssText =
-            'background:#FF3D14;color:#FFFFFF;font-weight:bold;text-align:center;';
+          row.cells[2].style.cssText = 'background:#FF3D14;color:#fff;font-weight:bold;text-align:center;';
         }
       }
     }
   </script>
   <style>
-    /* Base */
+    /* === Base === */
     body {
       margin:0; padding:40px 0;
       background:linear-gradient(135deg,#050607,#1A1A1A);
-      color:#B9C1C1; font-family:'Roboto',sans-serif; text-align:center;
+      color:#B9C1C1; font-family:'Roboto',sans-serif;
+    }
+    /* Header inside its own wrapper so it aligns with the table */
+    .header-wrapper {
+      width:75%; max-width:700px;
+      margin:0 auto 20px;
+      text-align:center;
     }
     h1 {
-      margin:0 0 20px; font-size:2.5rem; color:#FF3D14;
+      margin:0;
+      font-size:2.5rem;
+      color:#FF3D14;
       text-shadow:0 2px 4px rgba(0,0,0,0.7);
     }
 
@@ -66,14 +70,14 @@
       justify-content:center;
       align-items:flex-start;
       gap:40px;
-      width:100%;
-      box-sizing:border-box;
+      width:100%; box-sizing:border-box;
       padding:0 20px;
     }
 
     /* Legend panel */
     #info-panel {
       flex:0 0 200px;
+      margin-top:20px; /* lower it under the header */
       text-align:left;
     }
     .notice {
@@ -81,28 +85,32 @@
       font-weight:bold;
       text-decoration:underline;
       color:#E0E0E0;
-      font-size:0.95rem;
     }
     #legend {
-      display:flex; flex-direction:column; gap:8px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
     }
     .legend-item {
-      display:flex; align-items:center;
-      font-size:0.95rem; color:#E0E0E0;
+      display:flex;
+      align-items:center;
+      color:#E0E0E0;
     }
-    .swatch { width:14px; height:14px; border-radius:3px; margin-right:6px; }
+    .swatch {
+      width:14px; height:14px;
+      border-radius:3px;
+      margin-right:6px;
+    }
 
     /* Table container */
     #table-container {
       flex:1 1 auto;
-      max-width:700px;
-      width:75%; /* 15% smaller than original 90% */
+      width:75%; max-width:700px;
     }
     #table_div {
       width:100%;
       max-height:70vh;
       overflow-y:auto;
-      overflow-x:hidden;
       background:rgba(26,26,26,0.9);
       border:1px solid #B9C1C1;
       border-radius:12px;
@@ -110,12 +118,11 @@
       box-shadow:0 8px 24px rgba(0,0,0,0.5);
     }
 
-    /* Table styling */
+    /* Table styles */
     .google-visualization-table-th {
       background:#FF3D14!important;
-      color:#FFF!important;
+      color:#fff!important;
       font-weight:700!important;
-      font-size:1.1rem!important;
       text-align:center!important;
       padding:12px 16px!important;
     }
@@ -129,37 +136,45 @@
     #table_div table { border-collapse:separate; border-spacing:0; }
     #table_div thead th { position:sticky; top:0; z-index:2; }
 
-    /* Responsive */
+    /* === Mobile === */
     @media (max-width:768px) {
       #dashboard {
         flex-direction:column;
         align-items:center;
       }
       #info-panel {
-        width:100%;
-        max-width:600px;
+        width:100%; max-width:600px;
         text-align:center;
-        margin-bottom:20px;
+        margin:0 0 20px;
       }
+      #legend { align-items:center; }       /* center legend bullets */
       #table-container {
-        width:100%;
-        max-width:600px;
+        width:100%; max-width:600px;
       }
-      #table_div {
-        overflow-x:auto;
-      }
+      #table_div { overflow-x:auto; }       /* allow horizontal scroll */
     }
   </style>
 </head>
 <body>
-  <h1>375ai Gamer Leaderboard</h1>
+  <div class="header-wrapper">
+    <h1>375ai Gamer Leaderboard</h1>
+  </div>
   <div id="dashboard">
     <div id="info-panel">
       <p class="notice">Please don’t change your Discord username</p>
       <div id="legend">
-        <div class="legend-item"><span class="swatch" style="background:#FFD8B2"></span>Gamer I ＝ 0 – 199 XP</div>
-        <div class="legend-item"><span class="swatch" style="background:#FFB266"></span>Gamer II ＝ 200 – 399 XP</div>
-        <div class="legend-item"><span class="swatch" style="background:#FF3D14"></span>FAKER ＝ 400+ XP</div>
+        <div class="legend-item">
+          <span class="swatch" style="background:#FFD8B2"></span>
+          Gamer I ＝ 0 – 199 XP
+        </div>
+        <div class="legend-item">
+          <span class="swatch" style="background:#FFB266"></span>
+          Gamer II ＝ 200 – 399 XP
+        </div>
+        <div class="legend-item">
+          <span class="swatch" style="background:#FF3D14"></span>
+          FAKER ＝ 400+ XP
+        </div>
       </div>
     </div>
     <div id="table-container">
