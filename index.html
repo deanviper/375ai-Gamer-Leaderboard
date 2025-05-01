@@ -5,36 +5,42 @@
   <title>375ai Gamer Leaderboard</title>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script>
+    // Load Google Charts
     google.charts.load('current',{packages:['corechart','table']});
     google.charts.setOnLoadCallback(function(){
-      const q = new google.visualization.Query(
-        'https://docs.google.com/spreadsheets/d/1-URTW-manGg0sCs0xbvLKhvLpy9ZXmiytUVOR5ZTCXw/gviz/tq?sheet=Leaderboard&headers=1'
+      // Pull only columns A and B from your published sheet
+      const query = new google.visualization.Query(
+        'https://docs.google.com/spreadsheets/d/1-URTW-manGg0sCs0xbvLKhvLpy9ZXmiytUVOR5ZTCXw/gviz/tq?sheet=Leaderboard&headers=1&tq=select%20A%2C%20B'
       );
-      q.send(function(res){
-        if(res.isError()){
-          document.body.innerHTML = 'Error: '+res.getMessage();
+      query.send(function(response){
+        if(response.isError()){
+          document.body.innerHTML = 'Error: '+response.getMessage();
           return;
         }
-        const data = res.getDataTable();
+        const data = response.getDataTable();
+
+        // Draw the table
         new google.visualization.Table(
           document.getElementById('table_div')
-        ).draw(data,{width:'100%',height:'auto'});
+        ).draw(data, { width:'100%', height:'auto' });
+
+        // Draw the horizontal bar chart
         new google.visualization.BarChart(
           document.getElementById('chart_div')
-        ).draw(data,{
-          title:'375ai Gamer Leaderboard',
-          legend:{position:'none'},
-          hAxis:{title:'Total XP',minValue:0},
-          vAxis:{title:'Username'},
-          bars:'horizontal',
-          height:data.getNumberOfRows()*30+100
+        ).draw(data, {
+          title: '375ai Gamer Leaderboard',
+          legend: { position: 'none' },
+          hAxis: { title: 'Total XP', minValue: 0 },
+          vAxis: { title: 'Username' },
+          bars: 'horizontal',
+          height: data.getNumberOfRows() * 30 + 100
         });
       });
     });
   </script>
   <style>
-    body{font-family:sans-serif;margin:20px}
-    #chart_div,#table_div{margin-bottom:40px}
+    body { font-family: sans-serif; margin: 20px; }
+    #chart_div, #table_div { margin-bottom: 40px; }
   </style>
 </head>
 <body>
