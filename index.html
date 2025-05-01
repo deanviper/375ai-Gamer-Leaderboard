@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>375ai Gamer Leaderboard</title>
+  <!-- Roboto font -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script>
@@ -30,15 +31,14 @@
       const tbl = document.querySelector('#table_div table');
       if (!tbl) return;
       for (let row of tbl.tBodies[0].rows) {
-        const tierText = row.cells[2].textContent.trim();
-        if (tierText === 'Gamer I') {
-          row.cells[2].style.cssText = 'background:#FFD8B2;color:#050607;text-align:center;';
-        } else if (tierText === 'Gamer II') {
-          row.cells[2].style.cssText = 'background:#FFB266;color:#050607;text-align:center;';
-        } else if (tierText === 'Gamer III') {
-          row.cells[2].style.cssText = 'background:#FF3D14;color:#FFFFFF;text-align:center;';
+        const t = row.cells[2].textContent.trim();
+        if (t === 'Gamer I') {
+          row.cells[2].style.cssText = 'background:#FFD8B2;color:#050607;font-weight:bold;text-align:center;';
+        } else if (t === 'Gamer II') {
+          row.cells[2].style.cssText = 'background:#FFB266;color:#050607;font-weight:bold;text-align:center;';
+        } else if (t === 'Gamer III') {
+          row.cells[2].style.cssText = 'background:#FF3D14;color:#FFFFFF;font-weight:bold;text-align:center;';
         }
-        // center the XP column too:
         row.cells[1].style.textAlign = 'center';
       }
     }
@@ -61,7 +61,6 @@
       border:1px solid #B9C1C1; border-radius:12px;
       padding:10px; box-shadow:0 8px 24px rgba(0,0,0,0.5);
     }
-    /* solid orange header, centered text */
     .google-visualization-table-th {
       background:#FF3D14 !important;
       color:#FFFFFF   !important;
@@ -70,7 +69,6 @@
       text-align:center!important;
       padding:12px 16px !important;
     }
-    /* subtle zebra */
     .google-visualization-table-tr-even {
       background:#1E1E1E !important;
     }
@@ -80,9 +78,8 @@
     .google-visualization-table-td {
       padding:12px 16px !important;
       border-bottom:1px solid #333 !important;
-      color:#E0E0E0 !important;
+      /* no forced color here so tier text can show */
     }
-    /* sticky headers */
     #table_div table { border-collapse:separate; border-spacing:0; }
     #table_div thead th { position:sticky; top:0; z-index:2; }
   </style>
