@@ -4,218 +4,368 @@
   <meta charset="utf-8">
   <title>375ai Gamer Leaderboard</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <!-- Roboto -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #000000;
+      --panel: #181c20;
+      --accent: #FE4208;
+      --gamer1: linear-gradient(135deg, #389FFF 0%, #6EC6FF 100%);
+      --gamer2: linear-gradient(135deg, #389FFF 0%, #00E5FF 100%);
+      --faker: linear-gradient(135deg, #389FFF 0%, #FE4208 100%);
+      --text: #e0e0e0;
+      --muted: #b9c1c1;
+      --radius: 18px;
+      --shadow: 0 8px 32px rgba(0,0,0,0.25);
+      --search-bg: #23272e;
+      --search-focus: #389FFF;
+      --row-hover: #232e3a;
+      --fade-in: fadeIn 0.7s;
+    }
+    body {
+      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 8px;
+    }
+    .container {
+      width: 100%;
+      max-width: 700px;
+      margin: 40px auto 0;
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px 20px 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      animation: var(--fade-in);
+    }
+    .header {
+      text-align: center;
+    }
+    .brand-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 2rem;
+      color: var(--accent);
+      margin: 0 0 2px 0;
+      letter-spacing: 2px;
+      font-weight: 700;
+    }
+    .header h1 {
+      font-family: 'Oswald', sans-serif;
+      margin: 0 0 8px 0;
+      font-size: 2.2rem;
+      color: var(--text);
+      letter-spacing: 1px;
+      font-weight: 700;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+      border-bottom: 3px solid var(--accent);
+      display: inline-block;
+      padding-bottom: 4px;
+      background: linear-gradient(90deg, #389FFF 0%, #FE4208 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 8px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      color: var(--text);
+    }
+    .swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      display: inline-block;
+      border: 2px solid #fff2;
+      background-clip: padding-box;
+    }
+    .gamer1 { background: var(--gamer1); }
+    .gamer2 { background: var(--gamer2); }
+    .faker { background: var(--faker); }
+    .gamer1-bg { background: var(--gamer1) !important; color: #222 !important; }
+    .gamer2-bg { background: var(--gamer2) !important; color: #222 !important; }
+    .faker-bg { background: var(--faker) !important; color: #fff !important; }
+    .search-bar-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 8px;
+      width: 100%;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: var(--search-bg);
+      border-radius: 999px;
+      box-shadow: 0 1px 4px #0002;
+      padding: 5px 14px 5px 10px;
+      width: 220px;
+      transition: box-shadow .2s, border .2s;
+      border: 2px solid transparent;
+    }
+    .search-bar:focus-within {
+      border: 2px solid var(--search-focus);
+      box-shadow: 0 2px 8px #389fff44;
+    }
+    .search-bar input {
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      width: 100%;
+      padding: 6px 0 6px 6px;
+      font-family: 'Inter', sans-serif;
+    }
+    .search-icon {
+      color: var(--muted);
+      font-size: 1.1rem;
+      margin-left: 2px;
+    }
+    .table-scroll {
+      max-height: 480px;
+      overflow-y: auto;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+      background: #181c20;
+    }
+    .table-scroll::-webkit-scrollbar {
+      width: 8px;
+      background: #23272e;
+      border-radius: 8px;
+    }
+    .table-scroll::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #232e3a 0%, #2a3a4d 100%);
+      border-radius: 8px;
+    }
+    .table-scroll {
+      scrollbar-width: thin;
+      scrollbar-color: #2a3a4d #23272e;
+    }
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: transparent;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .leaderboard-table th, .leaderboard-table td {
+      padding: 14px 10px;
+      text-align: center;
+      font-size: 1.08rem;
+      transition: background 0.2s;
+    }
+    .leaderboard-table th {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      border-bottom: 2px solid #fff2;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.5px;
+    }
+    .leaderboard-table tr {
+      transition: background 0.2s;
+      opacity: 0;
+      animation: fadeIn 0.7s forwards;
+    }
+    .leaderboard-table tr:hover {
+      background: var(--row-hover) !important;
+    }
+    .rank {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 1.1rem;
+      font-family: 'Oswald', sans-serif;
+    }
+    .medal {
+      font-size: 1.2em;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+    .no-results {
+      text-align: center;
+      color: var(--muted);
+      padding: 32px 0 24px 0;
+      font-size: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.8;
+    }
+    .no-results-icon {
+      font-size: 2.2rem;
+      color: #389FFF;
+      opacity: 0.7;
+    }
+    .discord-link {
+      text-align: center;
+      font-size: 0.98rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .discord-link a {
+      color: var(--accent);
+      text-decoration: underline;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .discord-link a:hover {
+      color: #389FFF;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 16px 2px 12px 2px; }
+      .brand-title { font-size: 1.3rem; }
+      .header h1 { font-size: 1.1rem; }
+      .legend { flex-direction: column; gap: 8px; }
+      .leaderboard-table th, .leaderboard-table td { padding: 10px 4px; font-size: 0.98rem; }
+      .search-bar { width: 100%; min-width: 0; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(16px);}
+      to { opacity: 1; transform: none;}
+    }
+  </style>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="brand-title">375ai</div>
+      <h1>Gamer Leaderboard</h1>
+      <p>Ranks are updated live from Google Sheets.<br>
+      <span style="color:var(--accent);font-weight:600;">Please don’t change your Discord username</span></p>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><span class="swatch gamer1"></span> Gamer I: 0–199 XPs</div>
+      <div class="legend-item"><span class="swatch gamer2"></span> Gamer II: 200–399 XPs</div>
+      <div class="legend-item"><span class="swatch faker"></span> FAKER: 400+ XPs</div>
+    </div>
+    <div class="discord-link">
+      Join our Discord <a href="https://discord.gg/375ai" target="_blank" rel="noopener">here</a>
+    </div>
+    <div class="search-bar-wrap">
+      <form class="search-bar" onsubmit="return false;">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 20 20" fill="none">
+          <path d="M14.32 13.1l3.58 3.59a1 1 0 01-1.42 1.42l-3.59-3.58a7 7 0 111.43-1.43zM9 15a6 6 0 100-12 6 6 0 000 12z" fill="currentColor"/>
+        </svg>
+        <input id="search" type="text" placeholder="Search username..." autocomplete="off" />
+      </form>
+    </div>
+    <div class="table-scroll">
+      <table class="leaderboard-table" id="leaderboard">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Username</th>
+            <th>Total XP</th>
+            <th>Tier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="4" style="text-align:center;color:var(--muted);">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
   <script>
-    google.charts.load('current',{packages:['table']});
-    google.charts.setOnLoadCallback(drawTable);
+    google.charts.load('current', { packages: ['table'] });
+    google.charts.setOnLoadCallback(fetchData);
 
-    function drawTable() {
-      const q = new google.visualization.Query(
-        'https://docs.google.com/spreadsheets/d/1-URTW-manGg0sCs0xbvLKhvLpy9ZXmiytUVOR5ZTCXw/gviz/tq'
-        + '?sheet=Leaderboard&headers=1&tq=select%20A%2C%20B%2C%20C'
-      );
-      q.send(res => {
-        if (res.isError()) {
-          document.body.innerHTML = '<p style="color:#FF3D14">Error: '+res.getMessage()+'</p>';
-          return;
-        }
-        const data = res.getDataTable();
-        const table = new google.visualization.Table(document.getElementById('table_div'));
-        table.draw(data,{ showRowNumber:false, width:'100%', height:'100%' });
-        styleRows();
+    let allData = [];
+    function getTier(points) {
+      if (points >= 400) return { name: 'FAKER', class: 'faker-bg' };
+      if (points >= 200) return { name: 'Gamer II', class: 'gamer2-bg' };
+      return { name: 'Gamer I', class: 'gamer1-bg' };
+    }
+
+    function renderLeaderboard(data) {
+      const tbody = document.querySelector('#leaderboard tbody');
+      tbody.innerHTML = '';
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="no-results">
+          <div class="no-results-icon">🔍</div>
+          No results
+        </td></tr>`;
+        return;
+      }
+      // Sort by points descending
+      data.sort((a, b) => b.points - a.points);
+
+      data.forEach((row, i) => {
+        const tier = getTier(row.points);
+        let medal = '';
+        if (i === 0) medal = '🥇';
+        else if (i === 1) medal = '🥈';
+        else if (i === 2) medal = '🥉';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="rank">${medal ? `<span class="medal">${medal}</span>` : ''}${i + 1}</td>
+          <td>${row.username}</td>
+          <td>${row.points}</td>
+          <td class="${tier.class}">${tier.name}</td>
+        `;
+        tbody.appendChild(tr);
       });
     }
 
-    function styleRows() {
-      const tbl = document.querySelector('#table_div table');
-      if (!tbl) return;
-      for (let row of tbl.tBodies[0].rows) {
-        row.cells[1].style.textAlign = 'center';
-        let t = row.cells[2].textContent.trim();
-        if (t==='Gamer I') {
-          row.cells[2].style.cssText = 'background:#FFD8B2;color:#050607;font-weight:bold;text-align:center;';
-        } else if (t==='Gamer II') {
-          row.cells[2].style.cssText = 'background:#FFB266;color:#050607;font-weight:bold;text-align:center;';
-        } else {
-          row.cells[2].textContent = 'FAKER';
-          row.cells[2].style.cssText = 'background:#FF3D14;color:#fff;font-weight:bold;text-align:center;';
+    function fetchData() {
+      const query = new google.visualization.Query(
+        'https://docs.google.com/spreadsheets/d/1-URTW-manGg0sCs0xbvLKhvLpy9ZXmiytUVOR5ZTCXw/gviz/tq?sheet=Leaderboard&tq=select%20A,B'
+      );
+      query.send(function(response) {
+        if (response.isError()) {
+          document.querySelector('#leaderboard tbody').innerHTML =
+            '<tr><td colspan="4" style="color:var(--faker);text-align:center;">Failed to load leaderboard.</td></tr>';
+          return;
         }
-      }
+        const dataTable = response.getDataTable();
+        allData = [];
+        for (let i = 0; i < dataTable.getNumberOfRows(); i++) {
+          allData.push({
+            username: dataTable.getValue(i, 0),
+            points: parseInt(dataTable.getValue(i, 1), 10)
+          });
+        }
+        renderLeaderboard(allData);
+      });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const search = document.getElementById('search');
+      search.addEventListener('input', function() {
+        const val = search.value.trim().toLowerCase();
+        if (!val) {
+          renderLeaderboard(allData);
+        } else {
+          const filtered = allData.filter(row => row.username.toLowerCase().includes(val));
+          renderLeaderboard(filtered);
+        }
+      });
+    });
   </script>
-  <style>
-    /* ===== Base ===== */
-    body {
-      margin:0; padding:40px 0;
-      background:linear-gradient(135deg,#050607,#1A1A1A);
-      font-family:'Roboto',sans-serif;
-      color:#B9C1C1;
-      text-align:center;
-    }
-
-    /* ===== Desktop-only wrapper ===== */
-    .header-wrapper {
-      display:none;
-      width:75%;
-      max-width:700px;
-      margin:0 auto 20px;
-    }
-    /* style the mobile header */
-    .header-wrapper h1 {
-      margin:0;
-      font-size:2.5rem;
-      color:#FF3D14;
-      text-shadow:0 2px 4px rgba(0,0,0,0.7);
-    }
-
-    /* ===== Dashboard ===== */
-    #dashboard {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:40px;
-      padding:0 20px;
-      box-sizing:border-box;
-    }
-
-    /* Legend panel */
-    #info-panel {
-      flex:0 0 200px;
-      text-align:left;
-    }
-    .notice {
-      margin:0 0 12px;
-      font-weight:bold;
-      text-decoration:underline;
-      color:#E0E0E0;
-    }
-    #legend {
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-    .legend-item {
-      display:flex;
-      align-items:center;
-      color:#E0E0E0;
-    }
-    .swatch {
-      width:14px; height:14px;
-      border-radius:3px;
-      margin-right:6px;
-    }
-
-    /* Table container + in-table header for desktop */
-    #table-container {
-      flex:1 1 auto;
-      width:75%;
-      max-width:700px;
-    }
-    #table-container h1 {
-      margin:0 0 20px;
-      font-size:2.5rem;
-      color:#FF3D14;
-      text-shadow:0 2px 4px rgba(0,0,0,0.7);
-      text-align:center;
-    }
-    #table_div {
-      width:100%;
-      max-height:70vh;
-      overflow-y:auto;
-      overflow-x:hidden;
-      background:rgba(26,26,26,0.9);
-      border:1px solid #B9C1C1;
-      border-radius:12px;
-      padding:10px;
-      box-shadow:0 8px 24px rgba(0,0,0,0.5);
-    }
-
-    /* Table styling */
-    .google-visualization-table-th {
-      background:#FF3D14!important;
-      color:#fff!important;
-      font-weight:700!important;
-      font-size:1.1rem!important;
-      text-align:center!important;
-      padding:12px 16px!important;
-    }
-    .google-visualization-table-tr-even { background:#1E1E1E!important; }
-    .google-visualization-table-tr-odd  { background:#181818!important; }
-    .google-visualization-table-td {
-      padding:12px 16px!important;
-      border-bottom:1px solid #333!important;
-      white-space:nowrap;
-    }
-    #table_div table { border-collapse:separate; border-spacing:0; }
-    #table_div thead th { position:sticky; top:0; z-index:2; }
-
-    /* ===== Mobile tweaks ===== */
-    @media (max-width:768px) {
-      .header-wrapper {
-        display:block;
-      }
-      #table-container h1 {
-        display:none;
-      }
-
-      #dashboard {
-        flex-direction:column;
-      }
-      #info-panel {
-        width:100%;
-        max-width:600px;
-        text-align:center;
-        margin-bottom:20px;
-      }
-      #legend {
-        align-items:center;
-      }
-      #table-container {
-        width:100%;
-        max-width:600px;
-      }
-      #table_div {
-        overflow-x:auto;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- mobile-only header -->
-  <div class="header-wrapper">
-    <h1>375ai Gamer Leaderboard</h1>
-  </div>
-
-  <div id="dashboard">
-
-    <!-- legend always on left -->
-    <div id="info-panel">
-      <p class="notice">Please don’t change your Discord username</p>
-      <div id="legend">
-        <div class="legend-item">
-          <span class="swatch" style="background:#FFD8B2"></span>
-          Gamer I ＝ 0 – 199 XP
-        </div>
-        <div class="legend-item">
-          <span class="swatch" style="background:#FFB266"></span>
-          Gamer II ＝ 200 – 399 XP
-        </div>
-        <div class="legend-item">
-          <span class="swatch" style="background:#FF3D14"></span>
-          FAKER ＝ 400+ XP
-        </div>
-      </div>
-    </div>
-
-    <!-- desktop header + table -->
-    <div id="table-container">
-      <h1>375ai Gamer Leaderboard</h1>
-      <div id="table_div"></div>
-    </div>
-
-  </div>
 </body>
 </html>
