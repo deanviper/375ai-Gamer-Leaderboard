@@ -217,7 +217,7 @@
       font-family: 'Oswald', sans-serif;
     }
     .medal {
-      font-size: 1.2em;
+      font-size: 1.4em;
       margin-right: 4px;
       vertical-align: middle;
     }
@@ -274,7 +274,7 @@
       <div class="brand-title">375ai</div>
       <h1>Gamer Leaderboard</h1>
       <p>Ranks are updated live from Google Sheets.<br>
-      <span style="color:var(--accent);font-weight:600;">Please don’t change your Discord username</span></p>
+      <span style="color:var(--accent);font-weight:600;">Please don't change your Discord username</span></p>
     </div>
     <div class="legend">
       <div class="legend-item"><span class="swatch gamer1"></span> Gamer I: 0–199 XPs</div>
@@ -332,23 +332,23 @@
       }
       data.forEach((row, i) => {
         const tier = getTier(row.points);
-        let medal = '';
+        let rankDisplay = '';
         if (showTrueRank) {
           // Find the user's true rank in the full sorted leaderboard
           const trueRank = rankedData.findIndex(r => r.username === row.username && r.points === row.points) + 1;
-          if (trueRank === 1) medal = '🥇';
-          else if (trueRank === 2) medal = '🥈';
-          else if (trueRank === 3) medal = '🥉';
-          row.rank = trueRank;
+          if (trueRank === 1) rankDisplay = '<span class="medal">🥇</span>';
+          else if (trueRank === 2) rankDisplay = '<span class="medal">🥈</span>';
+          else if (trueRank === 3) rankDisplay = '<span class="medal">🥉</span>';
+          else rankDisplay = trueRank;
         } else {
-          if (i === 0) medal = '🥇';
-          else if (i === 1) medal = '🥈';
-          else if (i === 2) medal = '🥉';
-          row.rank = i + 1;
+          if (i === 0) rankDisplay = '<span class="medal">🥇</span>';
+          else if (i === 1) rankDisplay = '<span class="medal">🥈</span>';
+          else if (i === 2) rankDisplay = '<span class="medal">🥉</span>';
+          else rankDisplay = i + 1;
         }
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td class="rank">${medal ? `<span class="medal">${medal}</span>` : ''}${row.rank}</td>
+          <td class="rank">${rankDisplay}</td>
           <td>${row.username}</td>
           <td>${row.points}</td>
           <td class="${tier.class}">${tier.name}</td>
@@ -397,4 +397,4 @@
     });
   </script>
 </body>
-</html>
+</html> 
